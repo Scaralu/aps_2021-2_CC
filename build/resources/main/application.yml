@@ -1,0 +1,27 @@
+jwt:
+  secret: Ch&rrySpike998
+spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL}
+
+
+  #  datasource:
+#    url: jdbc:h2:mem:testdb
+#    data-username: sa
+#    data-password:
+#    driver-class-name: org.h2.Driver
+#  h2:
+#    console:
+#      enabled: true
+#      path: '/h2'
+#      settings:
+#        trace: false
+#        web-allow-others: false
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8082
