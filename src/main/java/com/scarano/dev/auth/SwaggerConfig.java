@@ -25,7 +25,7 @@ public class SwaggerConfig {
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cherry.spike.biometric.auth.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.scarano.dev.auth.controller"))
                 .paths(regex("/v1/.*"))
                 .build()
                 .apiInfo(metaInfo())
@@ -52,12 +52,12 @@ public class SwaggerConfig {
     private ApiInfo metaInfo() {
 
         ApiInfo apiInfo = new ApiInfo(
-                "Biometric Auth API",
-                "Biometric Auth",
+                "Biometric Authentication",
+                "Biometric Authentication",
                 "1.0",
                 "Terms of Service",
-                new Contact("Cherry Spike", "https://github.com/Cherry-Spike/biometric-auth-api/wiki/Proposta",
-                        "cherry.spike@gmail.com"),
+                new Contact("Lucca Scarano", "https://github.com/scaralu/",
+                        "scarano.dev@gmail.com"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licesen.html", new ArrayList<VendorExtension>()
         );

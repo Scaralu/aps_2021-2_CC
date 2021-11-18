@@ -8,6 +8,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ImpDigitalRepositorio  extends JpaRepository<ImpressaoDigital, Long> {
-    @Query("SELECT i FROM ImpressaoDigital i WHERE i.usuario.id = :usuarioId and i.usuario.login = :login")
-    Optional<ImpressaoDigital> findByUsuarioIdELogin(@Param("usuarioId") long usuarioId, @Param("login") String login);
+    @Query("SELECT i FROM ImpressaoDigital i WHERE i.usuario.id = :usuario_ID and i.usuario.login = :username")
+    Optional<ImpressaoDigital> findByUsuarioIdELogin(
+        @Param("usuario_ID")
+        long usuario_ID,
+
+        @Param("username")
+        String username
+    );
 }

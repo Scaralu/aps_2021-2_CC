@@ -28,9 +28,9 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Usuário não encontrado com login: " + login);
         }
 
-        String acesso = obterRole(usuario.get().getCargo().getNivel().getDescricao().toUpperCase());
+        String acesso = obterRole(usuario.get().getCargo().getNivel().getDescription().toUpperCase());
         List<GrantedAuthority> roles = AuthorityUtils.createAuthorityList(acesso);
-        return new User(usuario.get().getLogin(), usuario.get().getSenha(), roles);
+        return new User(usuario.get().getUsername(), usuario.get().getPassword(), roles);
     }
 
     private String obterRole(String nivel) {

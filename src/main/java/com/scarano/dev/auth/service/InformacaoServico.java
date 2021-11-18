@@ -18,6 +18,7 @@ import java.util.Optional;
 public class InformacaoServico {
     private static final String NIVEL_NAO_ENCONTRADO = "Nivel não encontrado!";
     private static final String USUARIO_NAO_ENCONTRADO_MENSAGEM = "Usuário não encontrado!";
+
     private final InformacaoRepositorio informacaoRepositorio;
     private final NivelRepositorio nivelRepositorio;
     private final UsuarioRepositorio usuarioRepositorio;
@@ -29,13 +30,15 @@ public class InformacaoServico {
     }
 
     public Optional<Informacao> salvar(InformacaoDTO informacaoDTO) {
-        if(!ehNivelValido(informacaoDTO.getNivelId()))
+        if(!ehNivelValido(informacaoDTO.getLevel_ID()))
             throw new NivelInvalidoException(NIVEL_NAO_ENCONTRADO);
 
-        Nivel nivel = nivelRepositorio.findById(informacaoDTO.getNivelId()).get();
-        Informacao informacao = Informacao.novo(nivel, informacaoDTO.getDescricao(),
-                informacaoDTO.getRiscoSubterraneoGus(), informacaoDTO.getRiscoSubterraneoEpa(),
-                informacaoDTO.getRiscoSuperficialGossSedimental(), informacaoDTO.getRiscoSuperficialGossDissolvido(), informacaoDTO.getEndereco());
+        Nivel nivel = nivelRepositorio.findById(informacaoDTO.getLevel_ID()).get();
+
+        Informacao informacao = Informacao.novo(
+                nivel,
+                informacaoDTO.getDescription()
+        );
 
         return Optional.of(informacaoRepositorio.save(informacao));
     }

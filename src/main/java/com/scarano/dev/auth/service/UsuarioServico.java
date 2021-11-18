@@ -34,26 +34,26 @@ public class UsuarioServico {
         this.passwordEncoder = passwordEncoder;
     }
     public Optional<Usuario> salvar(UsuarioDTO usuarioDTO) {
-        if(!ehCargoValido(usuarioDTO.getCargoId()))
+        if(!ehCargoValido(usuarioDTO.getRole_ID()))
             throw new CargoNaoEncontradoException(CARGO_NAO_ENCONTRADO);
 
-        if(loginExiste(usuarioDTO.getLogin()))
+        if(loginExiste(usuarioDTO.getUsername()))
             throw new LoginInvalidoException(LOGIN_REPETIDO);
 
-        String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getSenha());
-        Optional<Cargo> cargo = cargoRepositorio.findById(usuarioDTO.getCargoId());
+        String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getPassword());
+        Optional<Cargo> cargo = cargoRepositorio.findById(usuarioDTO.getRole_ID());
 
         if(!cargo.isPresent() && senhaCriptografada.isEmpty())
             return Optional.empty();
 
         Usuario usuario = Usuario
-                .novo(usuarioDTO.getNome(), usuarioDTO.getSobrenome(), cargo.get(), usuarioDTO.getLogin(), senhaCriptografada);
+                .novo(usuarioDTO.getUsername(), usuarioDTO.getLast_name(), cargo.get(), usuarioDTO.getUsername(), senhaCriptografada);
 
         return Optional.of(usuarioRepositorio.save(usuario));
     }
 
     private boolean loginExiste(String login) {
-        return usuarioRepositorio.findByLogin(login).isPresent();
+        return usuarioRepositorio.findByUsername(login).isPresent();
     }
 
     public Optional<Usuario> atualizar(UsuarioDTO usuarioDTO) {
@@ -61,19 +61,19 @@ public class UsuarioServico {
         if(!usuario.isPresent())
             throw new UsuarioNaoEncontradoException(USUARIO_NAO_ENCONTRADO_MENSAGEM);
 
-        if(!ehCargoValido(usuarioDTO.getCargoId()))
+        if(!ehCargoValido(usuarioDTO.getRole_ID()))
             throw new CargoNaoEncontradoException(CARGO_NAO_ENCONTRADO);
 
-        String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getSenha());
-        Optional<Cargo> cargo = cargoRepositorio.findById(usuarioDTO.getCargoId());
+        String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getPassword());
+        Optional<Cargo> cargo = cargoRepositorio.findById(usuarioDTO.getRole_ID());
 
-        if(!usuarioDTO.getSenha().isEmpty())
-            usuario.get().setSenha(senhaCriptografada);
+        if(!usuarioDTO.getRole_ID().isEmpty())
+            usuario.get().setPassword(senhaCriptografada);
 
         usuario.get().setCargo(cargo.get());
-        usuario.get().setLogin(usuarioDTO.getLogin());
-        usuario.get().setNome(usuarioDTO.getNome());
-        usuario.get().setSobrenome(usuarioDTO.getSobrenome());
+        usuario.get().setUsername(usuarioDTO.getUsername());
+        usuario.get().setName(usuarioDTO.getName());
+        usuario.get().setLast_name(usuarioDTO.getLast_name());
 
         return Optional.of(usuarioRepositorio.save(usuario.get()));
     }
@@ -93,7 +93,7 @@ public class UsuarioServico {
         if(!usuario.isPresent())
             throw new UsuarioNaoEncontradoException(USUARIO_NAO_ENCONTRADO_MENSAGEM);
 
-        Optional<ImpressaoDigital> impressaoDigital = impDigitalRepositorio.findByUsuarioIdELogin(id, usuario.get().getLogin());
+        Optional<ImpressaoDigital> impressaoDigital = impDigitalRepositorio.findByUsuarioIdELogin(id, usuario.get().getUsername());
         if(impressaoDigital.isPresent())
             impDigitalRepositorio.delete(impressaoDigital.get());
 
@@ -105,7 +105,7 @@ public class UsuarioServico {
     }
 
     public Optional<Usuario> obterPorLogin(String login) {
-        Optional<Usuario> usuario = usuarioRepositorio.findByLogin(login);
+        Optional<Usuario> usuario = usuarioRepositorio.findByUsername(login);
         return usuario;
     }
 }

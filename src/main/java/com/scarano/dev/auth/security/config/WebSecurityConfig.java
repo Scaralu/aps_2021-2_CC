@@ -25,7 +25,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService jwtUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
 
-    public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtRequestFilter jwtRequestFilter, UserDetailsService jwtUserDetailsService) {
+    public WebSecurityConfig(
+            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+            JwtRequestFilter jwtRequestFilter,
+            UserDetailsService jwtUserDetailsService
+    ) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtRequestFilter = jwtRequestFilter;
         this.jwtUserDetailsService = jwtUserDetailsService;

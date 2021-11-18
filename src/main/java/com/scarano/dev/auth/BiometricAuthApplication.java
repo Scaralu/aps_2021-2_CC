@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.MultipartConfigElement;
 
+@EnableAutoConfiguration
 @SpringBootApplication
 public class BiometricAuthApplication {
 	private static final Logger log = LoggerFactory.getLogger(BiometricAuthApplication.class);
@@ -28,7 +30,6 @@ public class BiometricAuthApplication {
 	}
 	private static final int MAX_REQUEST_SIZE_IN_MB = 150;
 
-//	@Bean
 	public CommandLineRunner demo(
 			UsuarioServico usuarioServico,
 			CargoRepositorio cargoRepositorio,
@@ -40,12 +41,12 @@ public class BiometricAuthApplication {
 
 			log.info("Criando Nivel Administrador");
 			Nivel admin = new Nivel();
-			admin.setDescricao("Administrador");
+			admin.setDescription("Administrador");
 			nivelRepositorio.save(admin);
 
 			log.info("Criando Cargo Diretor");
 			Cargo diretor = new Cargo();
-			diretor.setDescricao("Diretor");
+			diretor.setDescription("Diretor");
 			diretor.setNivel(admin);
 			cargoRepositorio.save(diretor);
 

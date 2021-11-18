@@ -12,13 +12,6 @@ CREATE TABLE addresses (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE pesticides (
-    id INT(3) AUTO_INCREMENT,
-    description VARCHAR(30) NOT NULL,
-    risk VARCHAR(30) NOT NULL,
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE levels (
     id INT(3) AUTO_INCREMENT,
     description VARCHAR(30) NOT NULL,
@@ -40,8 +33,6 @@ CREATE TABLE infos (
     id INT(3) AUTO_INCREMENT,
     level_ID INT(3) NOT NULL,
     description VARCHAR(30) NOT NULL,
-    pesticide_ID INT(3) NOT NULL,
-    address_ID INT(3) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -49,9 +40,6 @@ ALTER TABLE infos
 ADD CONSTRAINT fk_level_ID_infos
 FOREIGN KEY (level_ID) REFERENCES levels(id);
 
-ALTER TABLE infos
-ADD CONSTRAINT fk_pesticide_ID_infos
-FOREIGN KEY (pesticide_ID) REFERENCES pesticides(id);
 
 ALTER TABLE infos
 ADD CONSTRAINT fk_addresses_ID_infos
@@ -63,6 +51,7 @@ CREATE TABLE users (
     last_name VARCHAR(40) NOT NULL,
     role_ID INT(3) NOT NULL,
     username VARCHAR(10) NOT NULL,
+    password VARCHAR(100) NOT NULL
     PRIMARY KEY (id)
 );
 

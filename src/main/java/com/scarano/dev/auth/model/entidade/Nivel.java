@@ -15,9 +15,9 @@ import javax.persistence.*;
 public class Nivel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="IdNivel", nullable=false)
+    @Column(name="id", nullable=false)
     private long id;
-    @Column(name="Descricao", nullable=false)
-    private String descricao;
+    @Column(name="description", nullable=false)
+    private String description;
 }
 

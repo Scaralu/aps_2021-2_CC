@@ -34,7 +34,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
         final Optional<String> jwt = obterTokenRequisicao(request);
         jwt.ifPresent(token -> {
             try {
@@ -42,7 +46,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     setSecurityContext(new WebAuthenticationDetailsSource().buildDetails(request), token);
                 }
             } catch (IllegalArgumentException | MalformedJwtException e) {
-                logger.error("Token expirado ou Não estava acessível");
+                logger.error("Token expirado ou não acessível");
             }
         });
 

@@ -8,9 +8,9 @@ import lombok.*;
 @Setter
 public class UsuarioDTO {
     private long id;
-    private String nome;
-    private String sobrenome;
-    private long cargoId;
-    private String login;
-    private String senha;
+    private String name;
+    private String last_name;
+    private long role_ID;
+    private String username;
+    private String password;
 }

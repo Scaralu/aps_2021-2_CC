@@ -12,11 +12,6 @@ public class InformacaoRespostaDTO {
     private long id;
     private String descricao;
     private Nivel nivel;
-    private String riscoSubterraneoGus;
-    private String riscoSubterraneoEpa;
-    private String riscoSuperficialGossSedimental;
-    private String riscoSuperficialGossDissolvido;
-    private String endereco;
 
     public static InformacaoRespostaDTO converterEntidadeParaDTO(Informacao informacao) {
         ModelMapper modelMapper = new ModelMapper();

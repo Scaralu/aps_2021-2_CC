@@ -12,20 +12,17 @@ import javax.persistence.*;
 public class ImpressaoDigital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdDigital")
+    @Column(name = "id")
     private long id;
     @NonNull
-    @Column(name = "Nome", nullable = false)
-    private String nome;
-    @NonNull
-    @Column(name = "TipoArquivo", nullable = false)
-    private String tipoArquivo;
+    @Column(name = "name", nullable = false)
+    private String name;
     @NonNull
     @Lob
-    @Column(name = "Conteudo", nullable = false)
-    private byte[] conteudo;
+    @Column(name = "image", nullable = false)
+    private byte[] image;
     @NonNull
     @OneToOne(optional = false)
-    @JoinColumn(name = "Usuario_Id")
+    @JoinColumn(name="user_ID", referencedColumnName = "id")
     private Usuario usuario;
 }

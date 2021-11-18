@@ -8,7 +8,6 @@ import org.modelmapper.ModelMapper;
 public class ImpressaoDigitalRespostaDTO {
     private long id;
     private String nome;
-    private String tipoArquivo;
     private long usuarioId;
 
     public static ImpressaoDigitalRespostaDTO converterEntidadeParaDTO(ImpressaoDigital impressaoDigital) {

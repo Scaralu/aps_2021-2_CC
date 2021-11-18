@@ -6,6 +6,5 @@ import lombok.Setter;
 @Getter @Setter
 public class ImpressaoDigitalDTO {
     private String nome;
-    private String tipoArquivo;
     private long usuarioId;
 }

@@ -11,21 +11,22 @@ import javax.persistence.*;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="IdUsuario", nullable=false)
+    @Column(name="id", nullable=false)
     private long id;
-    @Column(name="Nome", nullable=false)
+    @Column(name="name", nullable=false)
     @NonNull
-    private String nome;
-    @Column(name="Sobrenome", nullable=false)
+    private String name;
+    @Column(name="last name", nullable=false)
     @NonNull
-    private String sobrenome;
+    private String last_name;
+    @NonNull
     @ManyToOne()
-    @NonNull
+    @JoinColumn(name="role_ID", referencedColumnName = "id")
     private Cargo cargo;
     @NonNull
-    @Column(name="Login", nullable=false)
-    private String login;
+    @Column(name="username", nullable=false)
+    private String username;
     @NonNull
-    @Column(name="Senha", nullable=false)
-    private String senha;
+    @Column(name="password", nullable=false)
+    private String password;
 }

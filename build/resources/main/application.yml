@@ -1,22 +1,11 @@
 jwt:
-  secret: Ch&rrySpike998
+  secret: sc4r4n0D3v
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL}
-
-
-  #  datasource:
-#    url: jdbc:h2:mem:testdb
-#    data-username: sa
-#    data-password:
-#    driver-class-name: org.h2.Driver
-#  h2:
-#    console:
-#      enabled: true
-#      path: '/h2'
-#      settings:
-#        trace: false
-#        web-allow-others: false
+    url: jdbc:mysql://localhost:3306/
+    username: root
+    password: root
+    database: auth
 
   jpa:
     hibernate:

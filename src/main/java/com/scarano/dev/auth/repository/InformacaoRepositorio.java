@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InformacaoRepositorio extends JpaRepository<Informacao, Long> {
-    @Query("SELECT i FROM Informacao i WHERE i.nivel.id <= :nivelId")
-    Optional<List<Informacao>> findByNivel(@Param("nivelId") long nivelId);
+    @Query("SELECT i FROM Informacao i WHERE i.nivel.id <= :level_ID")
+    Optional<List<Informacao>> findByNivel(@Param("level_ID") long level_ID);
 }

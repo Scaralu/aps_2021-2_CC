@@ -25,11 +25,11 @@ public class UsuarioRespostaDTO {
         modelMapper.typeMap(Usuario.class, UsuarioRespostaDTO.class)
                 .addMapping( src -> src.getCargo().getId(), UsuarioRespostaDTO::setCargoId);
         modelMapper.typeMap(Usuario.class, UsuarioRespostaDTO.class)
-                .addMapping( src -> src.getCargo().getDescricao(), UsuarioRespostaDTO::setCargoDescricao);
+                .addMapping( src -> src.getCargo().getDescription(), UsuarioRespostaDTO::setCargoDescricao);
         modelMapper.typeMap(Usuario.class, UsuarioRespostaDTO.class)
                 .addMapping( src -> src.getCargo().getNivel().getId(), UsuarioRespostaDTO::setNivelId);
         modelMapper.typeMap(Usuario.class, UsuarioRespostaDTO.class)
-                .addMapping( src -> src.getCargo().getNivel().getDescricao(), UsuarioRespostaDTO::setNivelDescricao);
+                .addMapping( src -> src.getCargo().getNivel().getDescription(), UsuarioRespostaDTO::setNivelDescricao);
         return modelMapper.map(usuario, UsuarioRespostaDTO.class);
     }
 }
