@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Getter @Setterls
 public class Cargo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

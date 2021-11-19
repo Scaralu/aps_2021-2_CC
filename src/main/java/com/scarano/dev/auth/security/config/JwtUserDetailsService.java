@@ -22,10 +22,10 @@ public class JwtUserDetailsService implements UserDetailsService {
     private UsuarioRepositorio usuarioRepositorio;
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Optional<Usuario> usuario = usuarioRepositorio.findByLogin(login);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Usuario> usuario = usuarioRepositorio.findByUsername(username);
         if (!usuario.isPresent()) {
-            throw new UsernameNotFoundException("Usuário não encontrado com login: " + login);
+            throw new UsernameNotFoundException("Usuário não encontrado com login: " + username);
         }
 
         String acesso = obterRole(usuario.get().getCargo().getNivel().getDescription().toUpperCase());
