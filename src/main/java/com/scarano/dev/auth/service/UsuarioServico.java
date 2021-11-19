@@ -18,9 +18,9 @@ import java.util.Optional;
 
 @Service
 public class UsuarioServico {
-    private static final String USUARIO_NAO_ENCONTRADO_MENSAGEM = "Usuário não encontrado!";
-    private static final String CARGO_NAO_ENCONTRADO = "Cargo não encontrado!";
-    private static final String LOGIN_REPETIDO = "o login já esta sendo utilizado por outro usuário";
+    private static final String USER_NOT_FOUND = "Usuário não encontrado!";
+    private static final String ROLE_NOT_FOUND = "Cargo não encontrado!";
+    private static final String USERNAME_ALREADY_EXISTS = "Este username ja esta cadastrado";
 
     private final UsuarioRepositorio usuarioRepositorio;
     private final ImpDigitalRepositorio impDigitalRepositorio;
@@ -33,49 +33,56 @@ public class UsuarioServico {
         this.cargoRepositorio = cargoRepositorio;
         this.passwordEncoder = passwordEncoder;
     }
-    public Optional<Usuario> salvar(UsuarioDTO usuarioDTO) {
-        if(!ehCargoValido(usuarioDTO.getRole_ID()))
-            throw new CargoNaoEncontradoException(CARGO_NAO_ENCONTRADO);
 
-        if(loginExiste(usuarioDTO.getUsername()))
-            throw new LoginInvalidoException(LOGIN_REPETIDO);
+    public Optional<Usuario> save(UsuarioDTO usuarioDTO) {
+        if(!isRoleValid(usuarioDTO.getRole_ID()))
+            throw new CargoNaoEncontradoException(ROLE_NOT_FOUND);
 
-        String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getPassword());
+        if(checkIfUsernameAlreadyExists(usuarioDTO.getUsername()))
+            throw new LoginInvalidoException(USERNAME_ALREADY_EXISTS);
+
+        String passwordCrypto = passwordEncoder.encode(usuarioDTO.getPassword());
         Optional<Cargo> cargo = cargoRepositorio.findById(usuarioDTO.getRole_ID());
 
-        if(!cargo.isPresent() && senhaCriptografada.isEmpty())
+        if(!cargo.isPresent() && passwordCrypto.isEmpty())
             return Optional.empty();
 
         Usuario usuario = Usuario
-                .novo(usuarioDTO.getUsername(), usuarioDTO.getLast_name(), cargo.get(), usuarioDTO.getUsername(), senhaCriptografada);
+                .novo(
+                        usuarioDTO.getName(),
+                        usuarioDTO.getLast_name(),
+                        cargo.get(),
+                        usuarioDTO.getUsername(),
+                        passwordCrypto
+                );
 
         return Optional.of(usuarioRepositorio.save(usuario));
     }
 
-    private boolean loginExiste(String login) {
+    private boolean checkIfUsernameAlreadyExists(String login) {
         return usuarioRepositorio.findByUsername(login).isPresent();
     }
 
-    public Optional<Usuario> atualizar(UsuarioDTO usuarioDTO) {
-        Optional<Usuario> usuario = usuarioRepositorio.findById(usuarioDTO.getId());
-        if(!usuario.isPresent())
-            throw new UsuarioNaoEncontradoException(USUARIO_NAO_ENCONTRADO_MENSAGEM);
+    public Optional<Usuario> update(UsuarioDTO usuarioDTO) {
+        Optional<Usuario> user = usuarioRepositorio.findById(usuarioDTO.getId());
+        if(!user.isPresent())
+            throw new UsuarioNaoEncontradoException(USER_NOT_FOUND);
 
-        if(!ehCargoValido(usuarioDTO.getRole_ID()))
-            throw new CargoNaoEncontradoException(CARGO_NAO_ENCONTRADO);
+        if(!isRoleValid(usuarioDTO.getRole_ID()))
+            throw new CargoNaoEncontradoException(ROLE_NOT_FOUND);
 
         String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getPassword());
         Optional<Cargo> cargo = cargoRepositorio.findById(usuarioDTO.getRole_ID());
 
         if(!usuarioDTO.getPassword().isEmpty())
-            usuario.get().setPassword(senhaCriptografada);
+            user.get().setPassword(senhaCriptografada);
 
-        usuario.get().setCargo(cargo.get());
-        usuario.get().setUsername(usuarioDTO.getUsername());
-        usuario.get().setName(usuarioDTO.getName());
-        usuario.get().setLast_name(usuarioDTO.getLast_name());
+        user.get().setCargo(cargo.get());
+        user.get().setUsername(usuarioDTO.getUsername());
+        user.get().setName(usuarioDTO.getName());
+        user.get().setLast_name(usuarioDTO.getLast_name());
 
-        return Optional.of(usuarioRepositorio.save(usuario.get()));
+        return Optional.of(usuarioRepositorio.save(user.get()));
     }
 
     public Optional<Usuario> obterPorId(long id) {
@@ -83,7 +90,7 @@ public class UsuarioServico {
         return usuario;
     }
 
-    private boolean ehCargoValido(long cargoId) {
+    private boolean isRoleValid(long cargoId) {
         Optional<Cargo> cargo = cargoRepositorio.findById(cargoId);
         return cargo.isPresent();
     }
@@ -91,7 +98,7 @@ public class UsuarioServico {
     public void delete(long id) {
         Optional<Usuario> usuario = usuarioRepositorio.findById(id);
         if(!usuario.isPresent())
-            throw new UsuarioNaoEncontradoException(USUARIO_NAO_ENCONTRADO_MENSAGEM);
+            throw new UsuarioNaoEncontradoException(USER_NOT_FOUND);
 
         Optional<ImpressaoDigital> impressaoDigital = impDigitalRepositorio.findByUsuarioIdELogin(id, usuario.get().getUsername());
         if(impressaoDigital.isPresent())

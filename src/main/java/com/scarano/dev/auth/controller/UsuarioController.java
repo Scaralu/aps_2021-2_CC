@@ -42,7 +42,7 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(reposta);
         }
         try {
-            Optional<Usuario> usuario = usuarioServico.salvar(usuarioDTO);
+            Optional<Usuario> usuario = usuarioServico.save(usuarioDTO);
             if (!usuario.isPresent()){
                 reposta.setData(new UsuarioRespostaDTO());
                 new ResponseEntity<>(reposta, HttpStatus.BAD_REQUEST);

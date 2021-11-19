@@ -16,7 +16,7 @@ public class Usuario {
     @Column(name="name", nullable=false)
     @NonNull
     private String name;
-    @Column(name="last name", nullable=false)
+    @Column(name="last_name", nullable=false)
     @NonNull
     private String last_name;
     @NonNull

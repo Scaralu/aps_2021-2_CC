@@ -39,7 +39,7 @@ public class InformacaoController {
             return ResponseEntity.badRequest().body(reposta);
         }
         try {
-            Optional<Informacao> informacao = informacaoServico.salvar(informacaoDTO);
+            Optional<Informacao> informacao = informacaoServico.save(informacaoDTO);
             if (!informacao.isPresent()){
                 reposta.setData(new InformacaoRespostaDTO());
                 new ResponseEntity<>(reposta, HttpStatus.BAD_REQUEST);

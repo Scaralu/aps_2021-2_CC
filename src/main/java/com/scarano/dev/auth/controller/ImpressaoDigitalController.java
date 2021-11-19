@@ -33,12 +33,12 @@ public class ImpressaoDigitalController {
     public ResponseEntity<Reposta<ImpressaoDigitalRespostaDTO>> salvar(@RequestParam(ARQUIVO) MultipartFile arquivo, @PathVariable(USUARIO_ID) long usuarioId) {
         Reposta<ImpressaoDigitalRespostaDTO> resposta = new Reposta<>();
         try {
-            Optional<ImpressaoDigital> impressaoDigital = impressaoDigitalServico.salvar(arquivo, usuarioId);
+            Optional<ImpressaoDigital> impressaoDigital = impressaoDigitalServico.save(arquivo, usuarioId);
             if (!impressaoDigital.isPresent()){
                 resposta.setData(new ImpressaoDigitalRespostaDTO());
                 new ResponseEntity<>(resposta, HttpStatus.BAD_REQUEST);
             }
-            ImpressaoDigitalRespostaDTO repostaDTO = ImpressaoDigitalRespostaDTO.converterEntidadeParaDTO(impressaoDigital.get());
+            ImpressaoDigitalRespostaDTO repostaDTO = ImpressaoDigitalRespostaDTO.entityConverter(impressaoDigital.get());
             resposta.setData(repostaDTO);
             return new ResponseEntity<>(resposta, HttpStatus.CREATED);
         }catch (UsuarioNaoEncontradoException naoEncontrado){
@@ -62,12 +62,12 @@ public class ImpressaoDigitalController {
     public ResponseEntity<Reposta<ImpressaoDigitalRespostaDTO>> atualizar (@RequestParam(ARQUIVO) MultipartFile arquivo, @PathVariable(USUARIO_ID) long usuarioId) {
         Reposta<ImpressaoDigitalRespostaDTO> resposta = new Reposta<>();
         try {
-            Optional<ImpressaoDigital> impressaoDigital = impressaoDigitalServico.atualizar(arquivo, usuarioId);
+            Optional<ImpressaoDigital> impressaoDigital = impressaoDigitalServico.update(arquivo, usuarioId);
             if (!impressaoDigital.isPresent()){
                 resposta.setData(new ImpressaoDigitalRespostaDTO());
                 new ResponseEntity<>(resposta, HttpStatus.BAD_REQUEST);
             }
-            ImpressaoDigitalRespostaDTO repostaDTO = ImpressaoDigitalRespostaDTO.converterEntidadeParaDTO(impressaoDigital.get());
+            ImpressaoDigitalRespostaDTO repostaDTO = ImpressaoDigitalRespostaDTO.entityConverter(impressaoDigital.get());
             resposta.setData(repostaDTO);
             return new ResponseEntity<>(resposta, HttpStatus.OK);
         }catch (UsuarioNaoEncontradoException naoEncontrado){

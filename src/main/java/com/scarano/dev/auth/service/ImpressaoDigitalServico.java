@@ -20,10 +20,11 @@ import java.util.Optional;
 @Service
 public class ImpressaoDigitalServico {
 
-    private static final String USUARIO_NAO_ENCONTRADO_MENSAGEM = "Usuário não encontrado!";
-    private static final double MINIMO_PERCENTUAL = 40;
-    private static final String USUARIO_JA_POSSUI_IMPDIGITAL_MENSAGEM = "Usuário já possui impressão digital!";
-    private static final String USUARIO_NAO_POSSUI_IMPDIGITAL_MENSAGEM = "Usuário não possui impressão digital!";
+    private static final double MINIMUN_MATCH_PERCENTAGE = 60;
+
+    private static final String USER_NOT_FOUND = "Usuário não encontrado!";
+    private static final String USER_ALREADY_REGISTERED = "Usuário já possui impressão digital!";
+    private static final String USER_WITHOUT_REGISTER = "Usuário não possui impressão digital!";
 
     private final ImpDigitalRepositorio impDigitalRepositorio;
     private final UsuarioRepositorio usuarioRepositorio;
@@ -33,17 +34,17 @@ public class ImpressaoDigitalServico {
         this.usuarioRepositorio = usuarioRepositorio;
     }
 
-    public Optional<ImpressaoDigital> salvar(MultipartFile arquivo, long usuarioId) throws IOException {
-        if(!ehUsuarioValido(usuarioId))
-            throw new UsuarioNaoEncontradoException(USUARIO_NAO_ENCONTRADO_MENSAGEM);
+    public Optional<ImpressaoDigital> save(MultipartFile arquivo, long usuarioId) throws IOException {
+        if(!isUserValid(usuarioId))
+            throw new UsuarioNaoEncontradoException(USER_NOT_FOUND);
 
         Optional<Usuario> usuario = usuarioRepositorio.findById(usuarioId);
 
         if (!usuario.isPresent())
-            throw new UsuarioNaoEncontradoException(USUARIO_NAO_ENCONTRADO_MENSAGEM);
+            throw new UsuarioNaoEncontradoException(USER_NOT_FOUND);
 
         if(usuarioPossuiImpDigital(usuario.get().getId(), usuario.get().getUsername()))
-            throw new UsuarioPossuiImpDigitalException(USUARIO_JA_POSSUI_IMPDIGITAL_MENSAGEM);
+            throw new UsuarioPossuiImpDigitalException(USER_ALREADY_REGISTERED);
 
         String nomeArquivo = StringUtils.cleanPath(arquivo.getOriginalFilename());
         ImpressaoDigital arquivoDb = ImpressaoDigital.novo(
@@ -55,55 +56,58 @@ public class ImpressaoDigitalServico {
         return Optional.of(impDigitalRepositorio.save(arquivoDb));
     }
 
-    private boolean ehUsuarioValido(long usuarioId) {
+    private boolean isUserValid(long usuarioId) {
         return usuarioRepositorio.findById(usuarioId).isPresent();
     }
 
-    private boolean ehUsuarioValido(String username) {
+    private boolean isUserValid(String username) {
         Optional<Usuario> usuario = usuarioRepositorio.findByUsername(username);
         return usuario.isPresent();
     }
 
-    public boolean ehDigitalValida(String username, MultipartFile arquivo) throws IOException {
-        double porcentagem = 0;
+    public boolean isDigitalValid(String username, MultipartFile arquivo) throws IOException {
+        double percentage = 0;
 
         try{
-            if (!ehUsuarioValido(username))
-                throw new UsuarioNaoEncontradoException("Usuario não encontrado");
+            if (!isUserValid(username))
+                throw new UsuarioNaoEncontradoException(USER_NOT_FOUND);
 
-            Optional<Usuario> usuario = usuarioRepositorio.findByUsername(username);
+            Optional<Usuario> user = usuarioRepositorio.findByUsername(username);
             Optional<ImpressaoDigital> impressaoDigital = impDigitalRepositorio
-                    .findByUsuarioIdELogin(usuario.get().getId(), usuario.get().getUsername());
+                    .findByUsuarioIdELogin(user.get().getId(), user.get().getUsername());
 
             FingerprintTemplate impressaoDigitalBd = new FingerprintTemplate(
                     new FingerprintImage()
                             .dpi(500)
-                            .decode(impressaoDigital.get().getImage()));
+                            .decode(impressaoDigital.get().getImage())
+            );
 
             FingerprintTemplate impressaoDigitalEmTeste = null;
                 impressaoDigitalEmTeste = new FingerprintTemplate(
                         new FingerprintImage()
                                 .dpi(500)
-                                .decode(arquivo.getBytes()));
+                                .decode(arquivo.getBytes())
+                );
 
-            porcentagem = new FingerprintMatcher()
+            percentage = new FingerprintMatcher()
                     .index(impressaoDigitalBd)
                     .match(impressaoDigitalEmTeste);
         } catch (IOException e) {
             throw new IOException("Erro ao ler arquivo "+e.getMessage());
         }
-        return porcentagem >= MINIMO_PERCENTUAL;
+
+        return percentage >= MINIMUN_MATCH_PERCENTAGE;
     }
 
-    public Optional<ImpressaoDigital> atualizar(MultipartFile arquivo, long usuarioId) throws IOException {
-        if (!ehUsuarioValido(usuarioId))
-            throw new UsuarioNaoEncontradoException("Usuario não encontrado");
+    public Optional<ImpressaoDigital> update(MultipartFile arquivo, long usuarioId) throws IOException {
+        if (!isUserValid(usuarioId))
+            throw new UsuarioNaoEncontradoException(USER_NOT_FOUND);
 
-        Optional<Usuario> usuario = usuarioRepositorio.findById(usuarioId);
+        Optional<Usuario> user = usuarioRepositorio.findById(usuarioId);
 
-        Optional<ImpressaoDigital> impDigital = impDigitalRepositorio.findByUsuarioIdELogin(usuario.get().getId(), usuario.get().getUsername());
+        Optional<ImpressaoDigital> impDigital = impDigitalRepositorio.findByUsuarioIdELogin(user.get().getId(), user.get().getUsername());
         if(!impDigital.isPresent())
-            throw new ImpressaoDigitaLNaoEncontradaException(USUARIO_NAO_POSSUI_IMPDIGITAL_MENSAGEM);
+            throw new ImpressaoDigitaLNaoEncontradaException(USER_WITHOUT_REGISTER);
 
         impDigital.get().setImage(arquivo.getBytes());
         impDigital.get().setName(arquivo.getName());
@@ -111,7 +115,7 @@ public class ImpressaoDigitalServico {
         return Optional.of(impDigitalRepositorio.save(impDigital.get()));
     }
 
-    private boolean usuarioPossuiImpDigital(long usuarioId, String login) {
-        return impDigitalRepositorio.findByUsuarioIdELogin(usuarioId, login).isPresent();
+    private boolean usuarioPossuiImpDigital(long user_ID, String username) {
+        return impDigitalRepositorio.findByUsuarioIdELogin(user_ID, username).isPresent();
     }
 }

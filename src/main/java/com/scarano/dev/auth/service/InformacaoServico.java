@@ -16,8 +16,8 @@ import java.util.Optional;
 
 @Service
 public class InformacaoServico {
-    private static final String NIVEL_NAO_ENCONTRADO = "Nivel não encontrado!";
-    private static final String USUARIO_NAO_ENCONTRADO_MENSAGEM = "Usuário não encontrado!";
+    private static final String LEVEL_NOT_FOUND = "Nivel não encontrado!";
+    private static final String USER_NOT_FOUND = "Usuário não encontrado!";
 
     private final InformacaoRepositorio informacaoRepositorio;
     private final NivelRepositorio nivelRepositorio;
@@ -29,9 +29,9 @@ public class InformacaoServico {
         this.usuarioRepositorio = usuarioRepositorio;
     }
 
-    public Optional<Informacao> salvar(InformacaoDTO informacaoDTO) {
-        if(!ehNivelValido(informacaoDTO.getLevel_ID()))
-            throw new NivelInvalidoException(NIVEL_NAO_ENCONTRADO);
+    public Optional<Informacao> save(InformacaoDTO informacaoDTO) {
+        if(!isLevelValid(informacaoDTO.getLevel_ID()))
+            throw new NivelInvalidoException(LEVEL_NOT_FOUND);
 
         Nivel nivel = nivelRepositorio.findById(informacaoDTO.getLevel_ID()).get();
 
@@ -43,16 +43,16 @@ public class InformacaoServico {
         return Optional.of(informacaoRepositorio.save(informacao));
     }
 
-    private boolean ehNivelValido(long nivelId) {
+    private boolean isLevelValid(long nivelId) {
         return nivelRepositorio.findById(nivelId).isPresent();
     }
 
-    public Optional<List<Informacao>> obterPorUsuarioId(long usuarioId) {
+    public Optional<List<Informacao>> obterPorUsuarioId(long user_ID) {
 
-        Optional<Usuario> usuario = usuarioRepositorio.findById(usuarioId);
-        if(!usuario.isPresent())
-            throw new UsuarioNaoEncontradoException(USUARIO_NAO_ENCONTRADO_MENSAGEM);
+        Optional<Usuario> user = usuarioRepositorio.findById(user_ID);
+        if(!user.isPresent())
+            throw new UsuarioNaoEncontradoException(USER_NOT_FOUND);
 
-        return informacaoRepositorio.findByNivel(usuario.get().getCargo().getNivel().getId());
+        return informacaoRepositorio.findByNivel(user.get().getCargo().getNivel().getId());
     }
 }

@@ -58,7 +58,7 @@ public class BiometricAuthApplication {
 				diretor.getId(),
 				"scarano",
 				"teste123");
-			usuarioServico.salvar(user);
+			usuarioServico.save(user);
 
 			log.info("Ready to go!");
 			log.info("-------------------------------");

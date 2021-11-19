@@ -37,17 +37,17 @@ public class JwtTokenController {
     }
 
     @PostMapping(value = AUTENTICACAO)
-    public ResponseEntity<?> Autenticacao(@RequestParam(ARQUIVO) MultipartFile arquivo, @RequestParam(LOGIN) String login, @RequestParam(SENHA) String senha) {
+    public ResponseEntity<?> Autenticacao(@RequestParam(ARQUIVO) MultipartFile arquivo, @RequestParam(LOGIN) String username, @RequestParam(SENHA) String password) {
         Reposta<JwtResponse> resposta = new Reposta<>();
         try {
-            boolean ehValida = impressaoDigitalServico.ehDigitalValida(login, arquivo);
+            boolean isValid = impressaoDigitalServico.isDigitalValid(username, arquivo);
 
-            if (!ehValida) {
+            if (!isValid) {
                 resposta.adicionarMensagemErro("Digital inválida");
                 return new ResponseEntity<>(resposta, HttpStatus.NOT_FOUND);
             }
 
-            final Authentication auth = autenticar(login, senha);
+            final Authentication auth = autenticar(username, password);
 
             SecurityContextHolder.getContext().setAuthentication(auth);
             resposta.setData(new JwtResponse(jwtTokenUtil.gerarToken(auth)));

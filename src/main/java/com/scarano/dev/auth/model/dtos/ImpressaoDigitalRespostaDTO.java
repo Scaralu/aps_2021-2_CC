@@ -7,13 +7,13 @@ import org.modelmapper.ModelMapper;
 @Getter @Setter
 public class ImpressaoDigitalRespostaDTO {
     private long id;
-    private String nome;
-    private long usuarioId;
+    private String name;
+    private long user_ID;
 
-    public static ImpressaoDigitalRespostaDTO converterEntidadeParaDTO(ImpressaoDigital impressaoDigital) {
+    public static ImpressaoDigitalRespostaDTO entityConverter(ImpressaoDigital impressaoDigital) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.typeMap(ImpressaoDigital.class, ImpressaoDigitalRespostaDTO.class)
-                .addMapping( src -> src.getUsuario().getId(), ImpressaoDigitalRespostaDTO::setUsuarioId);
+                .addMapping( src -> src.getUsuario().getId(), ImpressaoDigitalRespostaDTO::setUser_ID);
         return modelMapper.map(impressaoDigital, ImpressaoDigitalRespostaDTO.class);
     }
 }
